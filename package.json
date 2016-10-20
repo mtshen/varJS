@@ -1,0 +1,23 @@
+{
+  "name": "varJS",
+  "version": "0.0.1",
+  "Keywords" : "varJS",
+  "Homepage" : "www.home-natural.com",
+  "description": "varJS,用来管理变量,解决全局污染的轻量级JS库",
+  "Author": "mtshen <mtshen1997@163.com>",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.1",
+    "grunt-strip": "~0.2.1"
+  },
+  "dependencies": {
+    "express": "3.x"
+  },
+  "Bugs" : {
+	  "email" : "mtshen1997@163.com"
+	 }
+}
