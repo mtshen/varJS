@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 			},
 			build: {
 				src: [
-					'src/js/global.js'
+					'src/global.js'
 				],
 				dest: 'dest/var.min.js'
 			}
