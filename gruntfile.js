@@ -4,13 +4,27 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		uglify: {
 			options: {
-				banner: '/*! var.min.js | mtshen | 轻量级变量查取库 */\n'
+				banner: '/*! <%= pkg.name %> - 合并时间 - <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
 			build: {
 				src: [
-					'src/js/global.js'
+					'src/js/marking/global.js',
+					'src/js/marking/config.js',
+
+					'src/js/marking/onLeftList.js',
+					'src/js/marking/onColumn.js',
+					'src/js/marking/onDragenter.js',
+					'src/js/marking/onrightList.js',
+
+					'src/js/marking/leftlist.js',
+
+					'src/js/marking/getChartData.js',
+					'src/js/marking/formatModal.js',
+					'src/js/marking/documentRemove.js',
+
+					'src/js/marking/main.js'
 				],
-				dest: 'dest/var.min.js'
+				dest: 'dest/js/marking.min.js'
 			}
 		}
 	});
