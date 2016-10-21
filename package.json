@@ -1,8 +1,8 @@
 {
   "name": "varJS",
   "version": "0.0.1",
-  "Keywords" : "varJS",
-  "Homepage" : "www.home-natural.com",
+  "Keywords": "varJS",
+  "Homepage": "www.home-natural.com",
   "description": "varJS,用来管理变量,解决全局污染的轻量级JS库",
   "Author": "mtshen <mtshen1997@163.com>",
   "devDependencies": {
@@ -17,7 +17,7 @@
   "dependencies": {
     "express": "3.x"
   },
-  "Bugs" : {
-	  "email" : "mtshen1997@163.com"
-	 }
+  "Bugs": {
+    "email": "mtshen1997@163.com"
+  }
 }
