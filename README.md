@@ -66,14 +66,3 @@ mtshen.init(function(){	// 设置一个匿名的初始化函数
 mtshen.init() // 调用初始化函数
 mtshen.init('a') // 单独调用一个初始化函数
 ```
-
-######  judge.JS
-
-### 演示
-```
-  var mtshen = new Var(); // 创建一个可以存取变量的主节点
-  mtshen.str = 'hello varJS'; // 创建了一个变量str为 'hello varJS'
-  console.log(mtshen.str); // 'hello varJS'
-  mtshen.var('demo>str','hello varJS'); // 自动创建 mtshen.demo.str = "hello varJS"
-  mtshen.var('demo>str'); // 'hello varJS'
-```
