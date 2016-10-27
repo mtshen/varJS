@@ -1,35 +1,30 @@
 "use strict"; // 进入严格模式 代码必须在严格模式下编写
 var Var = (function() {
 	if(Var) console.info('varJS reloading!');
-	var $database = {} // 数据库
+
 	/**
 	 * varJS 主函数 加载或读出内容
 	 * @param {String} varName 分支 / 只能以字母_$开头,字母数字$_结尾
 	 */
-	function Global() {
-		var $branch = random6xkey(8);
-		while($database[$branch]) {
-			$branch = random6xkey(8);
-		}
-		this.$branch = $branch;
-		$database[this.$branch] = {};
-	}
+	function Global() {}
+
 	/**
 	 * 用于var的调试 直接将数据库释放到全局
 	 * @param {Object} varName 调试用户名
 	 */
+
 	Global.prototype.debugge = function() {
 			window.$var = $database[this.$branch];
 			console.log('debugge start $var =>', window.$var);
 		}
-	/**
+		/**
 		 * 为Var加入一个新的属性 或 方法
 		 * @param {String} name 属性或方法名
 		 * @param {Object} methods 属性或方法
 		 */
 	Global.prototype.addMethods = function(name, methods) {
 		try {
-			global.prototype[name] = methods;
+			Global.prototype[name] = methods;
 		} catch(e) {
 			var $console = ['global.addMethods() no success! why : '];
 			if(typeof name !== 'string') {
@@ -51,27 +46,27 @@ var Var = (function() {
 		}
 		return this;
 	}
-	/**
-	 * 返回一个以 $_ 开头的N位秘钥,内容为数字及小写字母组成
-	 * @param {Object} int
-	 */
-	function random6xkey(int) {
-		int = int || 6;
-		var randomSeed = '1,2,3,4,5,6,7,8,9,0,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z';
-		var rtnArr = []
-		for(var i = 0; i < int; i++) {
-			rtnArr.push(randomSeed.split(',')[parseInt(Math.random() * 36)]);
+
+	function GInit($this, $name) {
+		var arr = $name.replace(/ *> */g, '>').split('>');
+		if(arr.length === 1) {
+			return [$this, $name]
 		}
-		return '$_' + rtnArr.join('');
+		$this[arr[0]] = $this[arr[0]] ? $this[arr[0]] : {};
+		var rtn = $this[arr[0]];
+		for(var i = 1, j = arr.length - 1; i < j; i++) {
+			if(!rtn[arr[i]]) rtn[arr[i]] = {};
+			rtn = rtn[arr[i]];
+		}
+		return [rtn, arr[j]];
 	}
-	/**
-	 * 存取变量
-	 */
-	Global.prototype.var = function($name,$fn){
-		if($fn){
-			$database[this.$branch][$name] = $fn;
-		} else {
-			return $database[this.$branch][$name];
+
+	Global.prototype.var = function($name, $fn) {
+		var rtn = GInit(this, $name);
+		if(typeof $name === 'string' && arguments.length === 2) {
+			rtn[0][rtn[1]] = $fn;
+		} else if(typeof $name === 'string' && arguments.length === 1) {
+			return rtn[0][rtn[1]];
 		}
 	}
 	return Global;
