@@ -9,7 +9,8 @@ module.exports = function(grunt) {
 			build: {
 				src: [
 					'src/global.js',
-					'src/template.js'
+					'src/template.js',
+					'src/expand.js'
 				],
 				dest: 'dest/var.min.js'
 			}
