@@ -67,3 +67,19 @@ mtshen.init(function(){	// 设置一个匿名的初始化函数
 mtshen.init() // 调用初始化函数
 mtshen.init('a') // 单独调用一个初始化函数
 ```
+
+###### 随机数
+```
+mtshen.random()	// 随机 1~100 整数
+mtshen.random(1,50)	// 随机 1~50 整数
+mtshen.random(1.01,2)	// 随机 1.01~2.00 之间的数
+```
+
+###### 深拷贝
+```
+var obj = {a : 100};
+var b = mtshen.copy(obj)	// 能够完全拷贝一个任意类型数据
+b.a = 200;
+b;	// {a : 200}
+obj; // {a : 100}
+```

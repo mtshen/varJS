@@ -47,7 +47,7 @@ var Var = (function() {
 			window.$var = this;
 			console.log('debugge start $var =>', window.$var);
 		}
-		/**
+	/**
 		 * 为Var加入一个新的属性 或 方法
 		 * @param {String} name 属性或方法名
 		 * @param {Object} methods 属性或方法
@@ -76,6 +76,7 @@ var Var = (function() {
 		}
 		return this;
 	}
+
 	function GInit($this, $name) {
 		var arr = $name.replace(/ *> */g, '>').split('>');
 		if(arr.length === 1) {
@@ -104,7 +105,7 @@ var Var = (function() {
 				return rtn[0][rtn[1]];
 			}
 		}
-		/**
+	/**
 		 * init 初始化事件
 		 * @param {String} fnName 函数描述
 		 * @param {Function} fn	初始化的函数
@@ -117,8 +118,8 @@ var Var = (function() {
 						'_function': fnName
 					});
 				} else {
-					for(var i = 0, j = this.__init.length; i < j; i++){
-						if(this.__init[i].name === fnName){
+					for(var i = 0, j = this.__init.length; i < j; i++) {
+						if(this.__init[i].name === fnName) {
 							return this.__init[i]._function;
 						}
 					}
@@ -189,9 +190,28 @@ var Var = (function() {
 			return copyVar(rtn[0][rtn[1]]);
 		}
 	}
-	
-	Global.prototype.copy = function(data){
+
+	Global.prototype.copy = function(data) {
 		return copyVar(data);
+	}
+	
+	// 只匹配存在或不存在 前面加 !则不存在
+	Global.prototype.check = function($name) {
+		var $this = this;
+		var r = /^\[((!?[\w$_],?)+)\]$/.exec($name);
+		if(!r) return false;
+		if(r) {
+			var rge = r[1].split(',');
+			for(var i = 0, j = rge.length; i < j; i++) {
+				var rgei = /^! ?(.*)$/.exec(rge[i]);
+				if(rgei) { // 不存在
+					if($this[rgei[1]] === undefined) return false;
+				} else { // 存在
+					if(!($this[rge[i]] === undefined)) return false;
+				}
+			}
+			return true;
+		}
 	}
 	return Global;
 })();
