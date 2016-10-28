@@ -1,6 +1,6 @@
 {
   "name": "varJS",
-  "version": "0.0.0.4",
+  "version": "0.0.0.5",
   "Keywords": "varJS",
   "Homepage": "www.home-natural.com",
   "description": "varJS,用来管理变量,解决全局污染的轻量级JS库",

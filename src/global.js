@@ -195,6 +195,11 @@ var Var = (function() {
 		return copyVar(data);
 	}
 	
+	
+	Global.prototype.each = function($data,$fn) {
+		
+	}
+	
 	// 只匹配存在或不存在 前面加 !则不存在
 	Global.prototype.check = function($name) {
 		var $this = this;
