@@ -74,6 +74,7 @@
 - 2.2 random
 - 2.3 setTemplate
 - 2.4 copy
+
 ##### 0.3 addMethods 为所有的var示例加入一个方法
 ```
 	var main = new Var('main');
@@ -88,7 +89,7 @@
 	CODE..
 ``` 
 
-##### 0.5 constData 获取其他实例的常量
+#### 0.5 constData 获取其他实例的常量
 ```
 	var main = new Var('main');
 	var sw = new Var('sw');
