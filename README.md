@@ -89,7 +89,7 @@
 	CODE..
 ``` 
 
-#### 0.5 constData 获取其他实例的常量
+##### 0.5 constData 获取其他实例的常量
 ```
 	var main = new Var('main');
 	var sw = new Var('sw');
@@ -211,7 +211,7 @@ main.random(1.01,2)	// 随机 1.01~2.00 之间的数
  main.getTemplate('{abc}',{id:'abc'});	// <div>abc</div>
 ```
 
-######  2.4 copy 深拷贝
+#####  2.4 copy 深拷贝
 ```
 var obj = {a : 100};
 var b = main.copy(obj)	// 能够完全拷贝一个任意类型数据
