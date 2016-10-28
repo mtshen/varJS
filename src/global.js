@@ -3,9 +3,8 @@ var Var = (function() {
 	if(Var) console.info('varJS reloading!');
 	var $predefined = { // 预定义的
 		'__template': {},
-		'__init': {},
-		'__const': {},
-		'__Ainit': []
+		'__init': [],
+		'__const': {}
 	};
 	/**
 	 * copy一组新的数据
@@ -44,7 +43,6 @@ var Var = (function() {
 	 * 用于var的调试 直接将数据库释放到全局
 	 * @param {Object} varName 调试用户名
 	 */
-
 	Global.prototype.debugge = function() {
 			window.$var = this;
 			console.log('debugge start $var =>', window.$var);
@@ -78,7 +76,6 @@ var Var = (function() {
 		}
 		return this;
 	}
-
 	function GInit($this, $name) {
 		var arr = $name.replace(/ *> */g, '>').split('>');
 		if(arr.length === 1) {
@@ -115,18 +112,27 @@ var Var = (function() {
 	Global.prototype.init = function(fnName, fn) {
 		try {
 			if(fnName && !fn) { // 返回某个事件函数
-				if(typeof fnName === 'function'){
-					this.__Ainit.push(fnName);	
+				if(typeof fnName === 'function') {
+					this.__init.push({
+						'_function': fnName
+					});
 				} else {
+					for(var i = 0, j = this.__init.length; i < j; i++){
+						if(this.__init[i].name === fnName){
+							return this.__init[i]._function;
+						}
+					}
 					return this.__init[fnName];
 				}
 			} else if(fnName && fn) {
-				this.__init[fnName] = fn;
-				this.__Ainit.push(fn);
+				this.__init.push({
+					name: fnName,
+					_function: fn
+				});
 				return true;
 			} else if(!fnName && !fn) {
-				for(var i = 0, j = this.__Ainit.length; i < j; i++) {
-					this.__Ainit[i]();
+				for(var i = 0, j = this.__init.length; i < j; i++) {
+					this.__init[i]._function();
 				}
 			}
 		} catch(e) {
@@ -182,6 +188,10 @@ var Var = (function() {
 		} else if(typeof $name === 'string' && arguments.length === 1) {
 			return copyVar(rtn[0][rtn[1]]);
 		}
+	}
+	
+	Global.prototype.copy = function(data){
+		return copyVar(data);
 	}
 	return Global;
 })();
