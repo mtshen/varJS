@@ -202,11 +202,6 @@ var Var = (function() {
 		return copyVar(data);
 	}
 	
-	
-	Global.prototype.each = function($data,$fn) {
-		
-	}
-	
 	// 只匹配存在或不存在 前面加 !则不存在
 	Global.prototype.check = function($name) {
 		var $this = this;
@@ -225,7 +220,6 @@ var Var = (function() {
 			return true;
 		}
 	}
-	
 	Global.prototype.varData = function(name,$name){	// 暂时切换分支
 		// 检查预定义变量
 		var rtn = GInit($database[name], $name);

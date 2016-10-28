@@ -12,7 +12,8 @@ module.exports = function(grunt) {
 					'src/template.js',
 					'src/expand.js',
 					'src/is.js',
-					'src/sizzle.js'
+					'src/sizzle.js',
+					'src/html.js'
 				],
 				dest: 'dest/var.min.js'
 			}
