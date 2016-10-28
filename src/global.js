@@ -1,6 +1,9 @@
 "use strict"; // 进入严格模式 代码必须在严格模式下编写
 var Var = (function() {
 	if(Var) console.info('varJS reloading!');
+	
+	
+	var $database = {};
 	var $predefined = { // 预定义的
 		'__template': {},
 		'__init': [],
@@ -34,7 +37,8 @@ var Var = (function() {
 	 * varJS 主函数 加载或读出内容
 	 * @param {String} varName 分支 / 只能以字母_$开头,字母数字$_结尾
 	 */
-	function Global() {
+	function Global(name) {
+		if(name) $database[name] = this;
 		for(var k in $predefined) {
 			this[k] = copyVar($predefined[k]);
 		}
@@ -45,7 +49,10 @@ var Var = (function() {
 	 */
 	Global.prototype.debugge = function() {
 			window.$var = this;
-			console.log('debugge start $var =>', window.$var);
+			window.$database = $database;
+			console.log('%cdebugge =>','color:red');
+			console.log('$var =>', window.$var);
+			console.log('$database =>', window.$database);
 		}
 	/**
 		 * 为Var加入一个新的属性 或 方法
@@ -217,6 +224,17 @@ var Var = (function() {
 			}
 			return true;
 		}
+	}
+	
+	Global.prototype.varData = function(name,$name){	// 暂时切换分支
+		// 检查预定义变量
+		var rtn = GInit($database[name], $name);
+		return rtn[0][rtn[1]];
+	}
+	Global.prototype.constData = function(name,$name){	// 暂时切换分支
+		// 检查预定义变量
+		var rtn = GInit($database[name].__const, $name);
+		return copyVar(rtn[0][rtn[1]]);
 	}
 	return Global;
 })();
