@@ -1,8 +1,7 @@
 "use strict"; // 进入严格模式 代码必须在严格模式下编写
 var Var = (function() {
 	if(Var) console.info('varJS reloading!');
-	
-	
+
 	var $database = {};
 	var $predefined = { // 预定义的
 		'__template': {},
@@ -50,11 +49,11 @@ var Var = (function() {
 	Global.prototype.debugge = function() {
 			window.$var = this;
 			window.$database = $database;
-			console.log('%cdebugge =>','color:red');
+			console.log('%cdebugge =>', 'color:red');
 			console.log('$var =>', window.$var);
 			console.log('$database =>', window.$database);
 		}
-	/**
+		/**
 		 * 为Var加入一个新的属性 或 方法
 		 * @param {String} name 属性或方法名
 		 * @param {Object} methods 属性或方法
@@ -112,7 +111,7 @@ var Var = (function() {
 				return rtn[0][rtn[1]];
 			}
 		}
-	/**
+		/**
 		 * init 初始化事件
 		 * @param {String} fnName 函数描述
 		 * @param {Function} fn	初始化的函数
@@ -140,7 +139,11 @@ var Var = (function() {
 				return true;
 			} else if(!fnName && !fn) {
 				for(var i = 0, j = this.__init.length; i < j; i++) {
-					this.__init[i]._function();
+					try {
+						this.__init[i]._function();
+					} catch(e) {
+						console.log('Don\'t have the right to perform ', (this.__init[i].name || 'unnamed') + '()');
+					}
 				}
 			}
 		} catch(e) {
@@ -201,7 +204,7 @@ var Var = (function() {
 	Global.prototype.copy = function(data) {
 		return copyVar(data);
 	}
-	
+
 	// 只匹配存在或不存在 前面加 !则不存在
 	Global.prototype.check = function($name) {
 		var $this = this;
@@ -220,12 +223,12 @@ var Var = (function() {
 			return true;
 		}
 	}
-	Global.prototype.varData = function(name,$name){	// 暂时切换分支
+	Global.prototype.varData = function(name, $name) { // 暂时切换分支
 		// 检查预定义变量
 		var rtn = GInit($database[name], $name);
 		return rtn[0][rtn[1]];
 	}
-	Global.prototype.constData = function(name,$name){	// 暂时切换分支
+	Global.prototype.constData = function(name, $name) { // 暂时切换分支
 		// 检查预定义变量
 		var rtn = GInit($database[name].__const, $name);
 		return copyVar(rtn[0][rtn[1]]);
