@@ -1,13 +1,13 @@
 "use strict"; // 进入严格模式 代码必须在严格模式下编写
 var Var = (function() {
 	if(Var) console.info('varJS reloading!');
-
-	var $database = {};
-	var $predefined = { // 预定义的
-		'__template': {},
-		'__init': [],
-		'__const': {}
-	};
+	var $database = {
+			'$module': {}
+		},
+		$predefined = { // 预定义的
+			'__template': {},
+			'__init': []
+		};
 	/**
 	 * copy一组新的数据
 	 * @param {Object} data
@@ -31,33 +31,40 @@ var Var = (function() {
 				return data;
 		}
 		return data;
-	}
+	};
 	/**
 	 * varJS 主函数 加载或读出内容
 	 * @param {String} varName 分支 / 只能以字母_$开头,字母数字$_结尾
 	 */
 	function Global(name) {
-		if(name) $database[name] = this;
+		if(name) {
+			if($database[name]) {
+				console.info('Unable to create the,Because the name already exists!');
+				return false;
+			} else {
+				$database[name] = this;
+			}
+		}
 		for(var k in $predefined) {
 			this[k] = copyVar($predefined[k]);
 		}
-	}
+	};
 	/**
 	 * 用于var的调试 直接将数据库释放到全局
 	 * @param {Object} varName 调试用户名
 	 */
 	Global.prototype.debugge = function() {
-			window.$var = this;
-			window.$database = $database;
-			console.log('%cdebugge =>', 'color:red');
-			console.log('$var =>', window.$var);
-			console.log('$database =>', window.$database);
-		}
-		/**
-		 * 为Var加入一个新的属性 或 方法
-		 * @param {String} name 属性或方法名
-		 * @param {Object} methods 属性或方法
-		 */
+		window.$var = this;
+		window.$database = $database;
+		console.log('%cdebugge =>', 'color:red');
+		console.log('$var =>', window.$var);
+		console.log('$database =>', window.$database);
+	};
+	/**
+	 * 为Var加入一个新的属性 或 方法
+	 * @param {String} name 属性或方法名
+	 * @param {Object} methods 属性或方法
+	 */
 	Global.prototype.addMethods = function(name, methods) {
 		try {
 			Global.prototype[name] = methods;
@@ -81,9 +88,9 @@ var Var = (function() {
 			return false;
 		}
 		return this;
-	}
+	};
 
-	function GInit($this, $name) {
+	function GInit($this, $name) { // 核心函数 - 获取变量
 		var arr = $name.replace(/ *> */g, '>').split('>');
 		if(arr.length === 1) {
 			return [$this, $name]
@@ -95,27 +102,46 @@ var Var = (function() {
 			rtn = rtn[arr[i]];
 		}
 		return [rtn, arr[j]];
-	}
+	};
 
+	// 定义一个变量
 	Global.prototype.var = function($name, $fn) {
-			// 检查预定义变量
-			for(var k in $predefined) {
-				if($name === k) {
-					return console.log('The ' + $name + ' has been defined in advance');
-				}
-			}
-			var rtn = GInit(this, $name);
-			if(typeof $name === 'string' && arguments.length === 2) {
-				rtn[0][rtn[1]] = $fn;
-			} else if(typeof $name === 'string' && arguments.length === 1) {
-				return rtn[0][rtn[1]];
+		// 检查预定义变量
+		for(var k in $predefined) {
+			if($name === k) {
+				return console.log('The ' + $name + ' has been defined in advance');
 			}
 		}
-		/**
-		 * init 初始化事件
-		 * @param {String} fnName 函数描述
-		 * @param {Function} fn	初始化的函数
-		 */
+		var rtn = GInit(this, $name);
+		if(typeof $name === 'string' && arguments.length === 2) {
+			rtn[0][rtn[1]] = $fn;
+		} else if(typeof $name === 'string' && arguments.length === 1) {
+			return rtn[0][rtn[1]];
+		}
+	};
+
+	// 定义一个常量
+	Global.prototype.const = function($name, $fn) {
+		// 检查预定义变量
+		var rtn = GInit(this, $name);
+		if(typeof $name === 'string' && arguments.length === 2) {
+			if(rtn[0][rtn[1]]) {
+				return copyVar(rtn[0][rtn[1]]);
+			} else {
+				rtn[0][rtn[1]] = $fn;
+				Object.defineProperty(rtn[0], rtn[1], {
+					writable: false
+				})
+			}
+		} else if(typeof $name === 'string' && arguments.length === 1) {
+			return copyVar(rtn[0][rtn[1]]);
+		}
+	};
+	/**
+	 * init 初始化事件
+	 * @param {String} fnName 函数描述
+	 * @param {Function} fn	初始化的函数
+	 */
 	Global.prototype.init = function(fnName, fn) {
 		try {
 			if(fnName && !fn) { // 返回某个事件函数
@@ -149,7 +175,7 @@ var Var = (function() {
 		} catch(e) {
 			console.error(e);
 		}
-	}
+	};
 
 	/**
 	 * 解析返回的JSON
@@ -168,12 +194,13 @@ var Var = (function() {
 			console.log('parseJson : 解析出现错误! /n 原始数据 : ', data);
 		}
 		return data;
-	}
+	};
 
 	/**
-	 * 判断变量类型
+	 * 判断变量的类型
+	 * @param {Object} content 变量
 	 */
-	Global.prototype.addMethods('is', function(content) {
+	Global.prototype.is = function(content) {
 		try {
 			if(content === null) return null;
 			if(typeof content !== "object") return typeof content;
@@ -185,53 +212,43 @@ var Var = (function() {
 		} catch(e) {
 			return "cannotJudge variableType!";
 		}
-	})
-
-	Global.prototype.const = function($name, $fn) {
-		// 检查预定义变量
-		var rtn = GInit(this.__const, $name);
-		if(typeof $name === 'string' && arguments.length === 2) {
-			if(rtn[0][rtn[1]]) {
-				return
-			} else {
-				rtn[0][rtn[1]] = $fn;
-			}
-		} else if(typeof $name === 'string' && arguments.length === 1) {
-			return copyVar(rtn[0][rtn[1]]);
-		}
-	}
-
+	};
+	/**
+	 * 完全拷贝一个新的参数
+	 * @param {Object} data
+	 */
 	Global.prototype.copy = function(data) {
 		return copyVar(data);
-	}
+	};
 
-	// 只匹配存在或不存在 前面加 !则不存在
-	Global.prototype.check = function($name) {
-		var $this = this;
-		var r = /^\[((!?[\w$_],?)+)\]$/.exec($name);
-		if(!r) return false;
-		if(r) {
-			var rge = r[1].split(',');
-			for(var i = 0, j = rge.length; i < j; i++) {
-				var rgei = /^! ?(.*)$/.exec(rge[i]);
-				if(rgei) { // 不存在
-					if($this[rgei[1]] === undefined) return false;
-				} else { // 存在
-					if(!($this[rge[i]] === undefined)) return false;
-				}
+	/**
+	 * 检查两个对象是否相等
+	 * @param {Object} $d1 被检查的对象
+	 * @param {Object} $d2 参照对象
+	 * @param {Object} $f 默认false,是否进行全等检查
+	 */
+	Global.prototype.check = function($d1, $d2, $f) {
+
+	};
+	/**
+	 * 获取一个变量或者获取其他分支的一个变量
+	 * 替代varData及constData
+	 * @param {Object} name
+	 * @param {Object} $name
+	 */
+	Global.prototype.get = function(name, $name) {
+		if(!(name || $name)) return this;
+		if($name) {
+			// 检查预定义变量
+			if(!$database[name]) {
+				console.info('Don\'t have the branch!');
+				return undefined;
 			}
-			return true;
+			var rtn = GInit($database[name], $name);
+		} else {
+			var rtn = GInit(this, name);
 		}
-	}
-	Global.prototype.varData = function(name, $name) { // 暂时切换分支
-		// 检查预定义变量
-		var rtn = GInit($database[name], $name);
 		return rtn[0][rtn[1]];
-	}
-	Global.prototype.constData = function(name, $name) { // 暂时切换分支
-		// 检查预定义变量
-		var rtn = GInit($database[name].__const, $name);
-		return copyVar(rtn[0][rtn[1]]);
 	}
 	return Global;
 })();

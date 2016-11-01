@@ -6,15 +6,20 @@
 #### 0.0.0.3 支持>运算进行存取变量,增加了judge.js
 #### 0.0.0.4 judge.js 与 global.JS合并,并增加了一些新的方法和预定义属性
 #### 0.0.0.5 增加了几个新的方法,增加了sizzle.js,能够以Var.element()来获取元素
+#### 0.0.0.6 取消了一些预定义属性和方法,定义常量不再支持IE8-
+
 
 ### 说明
 ######  varJS 采用grunt编译
 ######  varJS 将来主要提供对变量的操作,和提供对模板操作的功能
 
 ### 模块
-######  global.JS
-######  template.JS
-######  expand.JS
+###### 1. global.JS
+###### 2. template.JS
+###### 3. expand.JS
+###### 4. is.JS
+###### 5. html.JS
+###### 6. sizzle.JS
 ---
 ### 快速开始
 > 1.1创建一个自己的分支
@@ -54,8 +59,6 @@
 - 0.2 const
 - 0.3 addMethods
 - 0.4 check
-- 0.5 constData
-- 0.6 varData
 - 0.7 debugge
 - 0.8 element
 - 0.9 getTemplate
@@ -87,22 +90,6 @@
 ##### 0.4 check 0.0.0.5x
 ```
 	CODE..
-``` 
-
-##### 0.5 constData 获取其他实例的常量
-```
-	var main = new Var('main');
-	var sw = new Var('sw');
-	main.const('b',100);
-	sw.constData('main','b') // 100;
-``` 
-
-##### 0.6 varData 获取其他实例的变量
-```
-	var main = new Var('main');
-	var sw = new Var('sw');
-	main.var('b',100);
-	sw.varData('main','b') // 100;
 ``` 
 
 ##### 0.7 debugge 调试数据,将数据直接复制给window.$var; 可以在控制台进行查看

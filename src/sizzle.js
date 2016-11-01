@@ -2292,5 +2292,7 @@
 		window.Sizzle = Sizzle;
 	}
 	// EXPOSE
-	Var.prototype.addMethods('element', Sizzle);
-})(window, Var);
+	try {
+		Var.prototype.addMethods('element', Sizzle);
+	} catch(e) {}
+})(window, Var || {});
