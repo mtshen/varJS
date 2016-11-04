@@ -17,7 +17,7 @@ var Var = (function() {
 			case 'array':
 				var arr = [];
 				for(var i = 0, j = data.length; i < j; i++) {
-					arr[i] = copyVar(data[i]);
+					arr.push(copyVar(data[i]));
 				}
 				return arr;
 			case 'likeArray':
@@ -221,6 +221,10 @@ var Var = (function() {
 		return copyVar(data);
 	};
 
+	function _check($d1, $d2, $f) {
+		return($f ? $d1 === $d2 : $d1 == $d2);
+	}
+
 	/**
 	 * 检查两个对象是否相等
 	 * @param {Object} $d1 被检查的对象
@@ -228,7 +232,38 @@ var Var = (function() {
 	 * @param {Object} $f 默认false,是否进行全等检查
 	 */
 	Global.prototype.check = function($d1, $d2, $f) {
-
+		var flag = true;
+		var $isType = this.is($d1);
+		switch($isType) {
+			case 'object':
+			case 'likeArray':
+				if($isType === this.is($d2)) {
+					for(var k in $d2) {
+						if(!$d1[k]) return false;
+					}
+					for(var k in $d1) {
+						if(!$d2[k]) return false;
+						switch(objk) {
+							case 'object':
+							case 'likeArray':
+								this.check($d1[k], $d2[k], $f);
+								break;
+							default:
+								if(!_check($d1[k], $d2[k], $f)) {
+									flag = false;
+								}
+								break;
+						}
+					}
+				} else {
+					return false;
+				}
+				break;
+			default:
+				return _check($d1, $d2, $f);
+				break;
+		}
+		return flag;
 	};
 	/**
 	 * 获取一个变量或者获取其他分支的一个变量

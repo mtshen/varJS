@@ -59,6 +59,7 @@
 - 0.2 const
 - 0.3 addMethods
 - 0.4 check
+- 0.5 merge
 - 0.7 debugge
 - 0.8 element
 - 0.9 getTemplate
@@ -87,9 +88,16 @@
 	main.fn() // 0;
 ``` 
 
-##### 0.4 check 0.0.0.5x
+##### 0.4 check 比较2个值的内容是否相等 第三个参数设置为true则判断全等
 ```
-	CODE..
+	main.check(1,1); // true
+	main.check(1,'1'); // false
+	main.check(1,'1',true); // true
+``` 
+
+##### 0.5 merge 合并对象,最后一个值可以传入一个数值,来确定合并几层数据
+```
+	main.merge({a:1,b:2},{a:2}); // {a:2,b:2}
 ``` 
 
 ##### 0.7 debugge 调试数据,将数据直接复制给window.$var; 可以在控制台进行查看
