@@ -16,7 +16,6 @@ Var.prototype.getTemplate = (function() {
 	function __tpl_ifElseFn(templateHtml) {
 		// 是否存在函数
 		var tpl_regexp = templateHtml.match(/^\{\{ ?if ?([^{}]*)\}\}(.*)\{\{ ?if ?\}\}$/);
-		console.log(tpl_regexp);
 		if(!tpl_regexp) return templateHtml;
 		var tpl_html = tpl_regexp[0]
 			.replace('\'', '\"')

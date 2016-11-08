@@ -8,20 +8,13 @@
 
 	<body>
 		<div class="firefoxDrag dimension"></div>
-		<script src="../src/global.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../src/template.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../src/expand.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../src/is.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../src/sizzle.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../src/html.js" type="text/javascript" charset="utf-8"></script>
-		<!--<script src="../dest/var.min.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="../dest/var.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var mtshen = new Var('mtshen');
 			mtshen.setTemplate('t', '<h1>{{welcome}} varJS!</h1>');
 			var tpl = mtshen.getTemplate('{t}', {
 				welcome: 'hello'
 			});
-			document.getElementsByTagName('div')[0].innerHTML = tpl;
 		</script>
 	</body>
 

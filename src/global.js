@@ -1,13 +1,101 @@
 "use strict"; // 进入严格模式 代码必须在严格模式下编写
 var Var = (function() {
-	if(Var) console.info('varJS reloading!');
-	var $database = {
+	if(Var) return console.info('varJS reloading!'); // 检查重复引用
+	// 预定义的
+	var $database = { // 预定义库
 			'$module': {}
 		},
-		$predefined = { // 预定义的
+		$predefined = { // 预定义的变量
 			'__template': {},
 			'__init': []
 		};
+	// 核心文件
+	var SET_VAR_CONST = (function() {
+		var NAME_BLACKLIST = /(^__template$)|(^__init$)|[^ ]/;
+		/**
+		 * 查询改变量下的某一个变量 0.2x
+		 * @param {Object} $data    	查询变量
+		 * @param {Object} $nextName	子变量名称
+		 * @param {Object} $placeholder	如果自变量不存在的占位变量
+		 * 会返回一个具体的值
+		 * */
+		function GET_NEXT_NAME($data, $nextName, $placeholder) {
+			var data = $data[$nextName];
+			return(data ? data : $placeholder);
+		}
+
+		/**
+		 * 查询改变量下的某一个变量 0.2x
+		 * @param {Object} $data    	查询变量
+		 * @param {Object} $nextName	查询条件
+		 * 会返回一个数组
+		 * */
+		function GET_NEXT_ATTRIBUTE($data, $nextName) {
+			var data = $data;
+			var $regexpRtn = /(?:^\[([_$\w]*) *(\$=) *(.*)\]$)|(?:^\[([_$\w]*) *([\^!*]?=?) *(.*)\]$)/.exec($nextName);
+			var $cont = [];
+			if($regexpRtn) {
+				$cont[0] = $regexpRtn[1] || $regexpRtn[4]; // 验证内容
+				$cont[1] = $regexpRtn[2] || $regexpRtn[5]; // 验证方式
+				$cont[3] = $regexpRtn[3] || $regexpRtn[6]; // 验证结果
+			}
+			try {
+				for(var k in $data) {
+					var regeData = $data[k];
+
+				}
+				switch($cont[1]) {
+					case '!=':
+						break;
+					case '^=':
+						break;
+					case '$=':
+						break;
+					case '*=':
+						break;
+					case '=':
+						break;
+					case '!':
+						break;
+					default:
+						break;
+				}
+			} catch(e) {}
+			return(data ? data : $placeholder);
+		}
+
+		// 核心函数 第一层 获取 >
+		function ET_INIT($this, $name) {
+			var arr = $name.replace(/ *> */g, '>').split('>'); // 分割
+			if(arr.length === 1) return [$this, $name] // 优化 | 如果只有1层 ,直接返回结果		
+			$this[arr[0]] = ($this[arr[0]] ? $this[arr[0]] : {}); // 如果存在未定义的路径地址,赋值为 {};
+			var rtn = $this[arr[0]]; // 获取第一个路径地址
+			for(var i = 1, j = arr.length - 1; i < j; i++) { // 路径循环查询
+				if(!rtn[arr[i]]) rtn[arr[i]] = {};
+				rtn = rtn[arr[i]];
+			} // 查询结束
+			return [rtn, arr[j]];
+		};
+		return function($name, $fn, $const) {
+			// 检查预定义命名冲突
+			if(NAME_BLACKLIST.test($name)) return console.log('The ' + $name + ' has been defined in advance');
+			var rtn = ET_INIT(this, $name); // 得到路径 [倒数第二路径,最后路径]
+			if(typeof $name === 'string' && arguments.length === 2) {
+				if(rtn[0][rtn[1]]) {
+					return($const ? copyVar(rtn[0][rtn[1]]) : rtn[0][rtn[1]]);
+				} else {
+					rtn[0][rtn[1]] = $fn;
+					$const && Object.defineProperty(rtn[0], rtn[1], {
+						writable: false
+					})
+				}
+			} else if(typeof $name === 'string' && arguments.length === 1) {
+				return($const ? copyVar(rtn[0][rtn[1]]) : rtn[0][rtn[1]]);
+			}
+
+		};
+	})();
+
 	/**
 	 * copy一组新的数据
 	 * @param {Object} data
@@ -90,52 +178,13 @@ var Var = (function() {
 		return this;
 	};
 
-	function GInit($this, $name) { // 核心函数 - 获取变量
-		var arr = $name.replace(/ *> */g, '>').split('>');
-		if(arr.length === 1) {
-			return [$this, $name]
-		}
-		$this[arr[0]] = $this[arr[0]] ? $this[arr[0]] : {};
-		var rtn = $this[arr[0]];
-		for(var i = 1, j = arr.length - 1; i < j; i++) {
-			if(!rtn[arr[i]]) rtn[arr[i]] = {};
-			rtn = rtn[arr[i]];
-		}
-		return [rtn, arr[j]];
-	};
-
 	// 定义一个变量
 	Global.prototype.var = function($name, $fn) {
-		// 检查预定义变量
-		for(var k in $predefined) {
-			if($name === k) {
-				return console.log('The ' + $name + ' has been defined in advance');
-			}
-		}
-		var rtn = GInit(this, $name);
-		if(typeof $name === 'string' && arguments.length === 2) {
-			rtn[0][rtn[1]] = $fn;
-		} else if(typeof $name === 'string' && arguments.length === 1) {
-			return rtn[0][rtn[1]];
-		}
+		SET_VAR_CONST.call(this, $name, $fn, false);
 	};
-
 	// 定义一个常量
 	Global.prototype.const = function($name, $fn) {
-		// 检查预定义变量
-		var rtn = GInit(this, $name);
-		if(typeof $name === 'string' && arguments.length === 2) {
-			if(rtn[0][rtn[1]]) {
-				return copyVar(rtn[0][rtn[1]]);
-			} else {
-				rtn[0][rtn[1]] = $fn;
-				Object.defineProperty(rtn[0], rtn[1], {
-					writable: false
-				})
-			}
-		} else if(typeof $name === 'string' && arguments.length === 1) {
-			return copyVar(rtn[0][rtn[1]]);
-		}
+		SET_VAR_CONST.call(this, $name, $fn, true);
 	};
 	/**
 	 * init 初始化事件
@@ -166,7 +215,7 @@ var Var = (function() {
 			} else if(!fnName && !fn) {
 				for(var i = 0, j = this.__init.length; i < j; i++) {
 					try {
-						this.__init[i]._function();
+						this.__init[i]._function.call(this);
 					} catch(e) {
 						console.log('Don\'t have the right to perform ', (this.__init[i].name || 'unnamed') + '()');
 					}
@@ -285,5 +334,6 @@ var Var = (function() {
 		}
 		return rtn[0][rtn[1]];
 	}
+	Global.prototype.version = 'Beta 0.1';
 	return Global;
 })();

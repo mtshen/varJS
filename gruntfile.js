@@ -13,7 +13,8 @@ module.exports = function(grunt) {
 					'src/expand.js',
 					'src/is.js',
 					'src/sizzle.js',
-					'src/html.js'
+					'src/html.js',
+					'src/array.js'
 				],
 				dest: 'dest/var.min.js'
 			}

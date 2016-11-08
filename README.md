@@ -1,5 +1,26 @@
 # varJS
 
+## VarJS 0.1 beta版本
+- 提供存取变量的功能,解决全局污染问题
+- 支持>运算进行存取变量
+- 支持存取常量
+- 加入sizzleJS,使得VarJS能以css选择器的方式获取页面元素  
+- 加入了整数与小数的随机,对象合并,对象复制,字符串转DOM,变量检查等功能
+- 使Array 的 forEach,filter,map,some,every,indexOf,lastIndexOf,reduce,reduceRight函数支持IE6 +
+- 提供了一个模板引擎的雏形
+- 具体使用方式参照说明 
+
+## 0.2 beta版本 可能出现的新功能
+- 以[data=xxx]的方式获取变量
+- 对String原生对象的新方法兼容
+- 模板引擎优化
+- 优化存取变量算法
+
+
+## 建议
+- 在使用VarJS的时候出现的任何问题和建议都可以提交到 mtshen1997@sina.com
+- 该项目目前处于开发前期,任何问题和意见都会在第一时间进行反馈
+
 ### 版本
 #### 0.0.0.1 提供存取变量的功能,解决全局污染问题
 #### 0.0.0.2 对全局变量的存取方式进行了修改
@@ -8,7 +29,7 @@
 #### 0.0.0.5 增加了几个新的方法,增加了sizzle.js,能够以Var.element()来获取元素
 #### 0.0.0.6 取消了一些预定义属性和方法,定义常量不再支持IE8-
 #### 0.0.0.7 增加了2个常用方法
-
+#### 0.0.1.0 支持使Array 的 forEach,filter,map,some,every,indexOf,lastIndexOf,reduce,reduceRight函数支持IE6 + 
 ### 说明
 ######  varJS 采用grunt编译
 ######  varJS 将来主要提供对变量的操作,和提供对模板操作的功能
