@@ -7,11 +7,12 @@ var Var = (function() {
 		},
 		$predefined = { // 预定义的变量
 			'__template': {},
-			'__init': []
+			'__init': [],
+			'__scope': {},
 		};
 	// 核心文件
 	var SET_VAR_CONST = (function() {
-		var NAME_BLACKLIST = /(^__template$)|(^__init$)|[^ ]/;
+		var NAME_BLACKLIST = /(^__template$)|(^__init$)|(^__scope$)/;
 		/**
 		 * 查询改变量下的某一个变量 0.2x
 		 * @param {Object} $data    	查询变量
@@ -76,11 +77,12 @@ var Var = (function() {
 			} // 查询结束
 			return [rtn, arr[j]];
 		};
+
 		return function($name, $fn, $const) {
 			// 检查预定义命名冲突
 			if(NAME_BLACKLIST.test($name)) return console.log('The ' + $name + ' has been defined in advance');
 			var rtn = ET_INIT(this, $name); // 得到路径 [倒数第二路径,最后路径]
-			if(typeof $name === 'string' && arguments.length === 2) {
+			if(typeof $name === 'string' && $fn) {
 				if(rtn[0][rtn[1]]) {
 					return($const ? copyVar(rtn[0][rtn[1]]) : rtn[0][rtn[1]]);
 				} else {
@@ -89,10 +91,10 @@ var Var = (function() {
 						writable: false
 					})
 				}
-			} else if(typeof $name === 'string' && arguments.length === 1) {
-				return($const ? copyVar(rtn[0][rtn[1]]) : rtn[0][rtn[1]]);
+			} else if(typeof $name === 'string' && !$fn) {
+				var rtn = ($const ? copyVar(rtn[0][rtn[1]]) : rtn[0][rtn[1]]);
+				return rtn;
 			}
-
 		};
 	})();
 
@@ -180,11 +182,11 @@ var Var = (function() {
 
 	// 定义一个变量
 	Global.prototype.var = function($name, $fn) {
-		SET_VAR_CONST.call(this, $name, $fn, false);
+		return SET_VAR_CONST.call(this, $name, $fn, false);
 	};
 	// 定义一个常量
 	Global.prototype.const = function($name, $fn) {
-		SET_VAR_CONST.call(this, $name, $fn, true);
+		return SET_VAR_CONST.call(this, $name, $fn, true);
 	};
 	/**
 	 * init 初始化事件
@@ -328,12 +330,23 @@ var Var = (function() {
 				console.info('Don\'t have the branch!');
 				return undefined;
 			}
-			var rtn = GInit($database[name], $name);
+			var rtn = SET_VAR_CONST.call($database[name], $name);
 		} else {
-			var rtn = GInit(this, name);
+			var rtn = SET_VAR_CONST.call(this, name);
 		}
-		return rtn[0][rtn[1]];
+		return rtn;
 	}
-	Global.prototype.version = 'Beta 0.1';
+	Global.prototype.scope = function($name, $fn) {
+		this.__scope[$name] = $fn.call(this, this.copy(this));
+	};
+	Global.prototype.request = function($name, $fn) {
+		if(!$fn) {
+			return this.__scope[$name];
+		} else {
+			return this.get($name, '__scope>' + $fn);
+		}
+	};
+
+	Global.prototype.version = 'Beta 0.1.1';
 	return Global;
 })();

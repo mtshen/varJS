@@ -6,7 +6,7 @@
 - 支持存取常量
 - 加入sizzleJS,使得VarJS能以css选择器的方式获取页面元素  
 - 加入了整数与小数的随机,对象合并,对象复制,字符串转DOM,变量检查等功能
-- 使Array 的 forEach,filter,map,some,every,indexOf,lastIndexOf,reduce,reduceRight函数支持IE6 +
+- 使Array 的 forEach,filter,map,some,every,indexOf,lastIndexOf,reduce,reduceRight函数支持 IE6+
 - 提供了一个模板引擎的雏形
 - 具体使用方式参照说明 
 
